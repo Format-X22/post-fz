@@ -22,7 +22,7 @@ async function bootstrap() {
         }),
     );
 
-    const swaggerConfig = new DocumentBuilder().setTitle('App api').setVersion('1.0').build();
+    const swaggerConfig = new DocumentBuilder().setTitle('App api').setVersion('1.0').addBearerAuth().build();
     const document = SwaggerModule.createDocument(app, swaggerConfig);
 
     SwaggerModule.setup('api-docs', app, document);

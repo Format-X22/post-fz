@@ -18,7 +18,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
         }),
         ThrottlerModule.forRoot({
             ttl: 60,
-            limit: 10,
+            limit: 50,
         }),
         SequelizeModule.forRootAsync({
             imports: [ConfigModule],

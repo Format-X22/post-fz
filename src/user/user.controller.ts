@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.model';
-import { ApiProperty, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { MinLength } from 'class-validator';
 import { Public } from '../auth/guards/public.guard';
 
@@ -18,6 +18,7 @@ export class RegistrationArgs {
 export class SettingsArgs {}
 
 @ApiTags('api')
+@ApiBearerAuth()
 @Controller('user')
 export class UserController {
     constructor(private readonly userService: UserService) {}
