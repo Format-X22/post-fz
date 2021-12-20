@@ -1,21 +1,39 @@
-import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Request } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.model';
-import { ApiBearerAuth, ApiProperty, ApiTags } from '@nestjs/swagger';
-import { MinLength } from 'class-validator';
+import { ApiBearerAuth, ApiProperty, ApiPropertyOptional, ApiTags } from '@nestjs/swagger';
+import { MaxLength, MinLength } from 'class-validator';
 import { Public } from '../auth/guards/public.guard';
+import { TAuth } from '../auth/auth.controller';
 
 export class RegistrationArgs {
     @ApiProperty()
     @MinLength(3)
+    @MaxLength(128)
     login: string;
 
     @ApiProperty()
     @MinLength(8)
+    @MaxLength(128)
     password: string;
 }
 
-export class SettingsArgs {}
+export class SettingsArgs {
+    @ApiPropertyOptional()
+    @MinLength(1)
+    @MaxLength(128)
+    firstName?: string;
+
+    @ApiPropertyOptional()
+    @MinLength(1)
+    @MaxLength(128)
+    lastName?: string;
+
+    @ApiPropertyOptional()
+    @MinLength(1)
+    @MaxLength(2048)
+    bio?: string;
+}
 
 @ApiTags('api')
 @ApiBearerAuth()
@@ -30,8 +48,8 @@ export class UserController {
     }
 
     @Get()
-    async getMe(): Promise<Partial<User>> {
-        return this.userService.getMe();
+    async getMe(@Request() req: TAuth): Promise<Partial<User>> {
+        return this.userService.getMe(req.user.id);
     }
 
     @Get(':id')
@@ -40,7 +58,7 @@ export class UserController {
     }
 
     @Patch()
-    async updateSettings(@Body() updateUserDto: SettingsArgs): Promise<Partial<User>> {
-        return this.userService.updateSettings(updateUserDto);
+    async updateSettings(@Request() req: TAuth, @Body() updateUserDto: SettingsArgs): Promise<Partial<User>> {
+        return this.userService.updateSettings(req.user.id, updateUserDto);
     }
 }

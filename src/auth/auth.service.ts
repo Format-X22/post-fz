@@ -10,18 +10,16 @@ export class AuthService {
 
     async validateUser(username: string, password: string): Promise<any> {
         const user = await this.usersService.getByLoginAsAdmin(username);
+
         if (user && (await bcrypt.compare(password, user.passwordHash))) {
-            const result = user['dataValues'] as User;
-
-            delete result.passwordHash;
-
-            return result;
+            return this.usersService.removeSecurityFields(user);
         }
+
         return null;
     }
 
-    async login(user: any) {
-        const payload = { username: user.username, sub: user.userId };
+    async login(user: User) {
+        const payload = { username: user.login, sub: user.id };
 
         return {
             access_token: this.jwtService.sign(payload),
