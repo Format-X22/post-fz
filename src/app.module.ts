@@ -5,9 +5,10 @@ import { ViewModule } from './view/view.module';
 import { ChatModule } from './chat/chat.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { UserModule } from './user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { UserModule } from './user/user.module';
+import { User } from './user/user.model';
 
 @Module({
     imports: [
@@ -27,7 +28,9 @@ import { SequelizeModule } from '@nestjs/sequelize';
                     username: cfg.get('PFZ_DB_USERNAME', 'postgres'),
                     password: cfg.get('PFZ_DB_PASSWORD', ''),
                     database: cfg.get('PFZ_DB_DATABASE_NAME', 'postfz'),
-                    models: [],
+                    models: [User],
+                    autoLoadModels: true,
+                    logging: false,
                 };
             },
         }),
