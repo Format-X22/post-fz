@@ -9,10 +9,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { UserModule } from './user/user.module';
 import { User } from './user/user.model';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 
 @Module({
     imports: [
-        ConfigModule.forRoot(),
+        ConfigModule.forRoot({
+            isGlobal: true,
+        }),
         ThrottlerModule.forRoot({
             ttl: 60,
             limit: 10,
@@ -45,6 +48,10 @@ import { User } from './user/user.model';
         {
             provide: APP_GUARD,
             useClass: ThrottlerGuard,
+        },
+        {
+            provide: APP_GUARD,
+            useClass: JwtAuthGuard,
         },
     ],
 })

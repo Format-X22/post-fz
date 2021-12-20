@@ -39,6 +39,10 @@ export class UserService {
         return;
     }
 
+    async getByLoginAsAdmin(login: string): Promise<User> {
+        return await User.findOne({ where: { login } });
+    }
+
     private removeSecurityFields(user: User): Partial<User> {
         user = user['dataValues'];
 

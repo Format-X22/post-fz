@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 import { User } from './user.model';
 import { ApiProperty, ApiTags } from '@nestjs/swagger';
 import { MinLength } from 'class-validator';
+import { Public } from '../auth/guards/public.guard';
 
 export class RegistrationArgs {
     @ApiProperty()
@@ -21,6 +22,7 @@ export class SettingsArgs {}
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
+    @Public()
     @Post()
     async register(@Body() createUserDto: RegistrationArgs): Promise<Partial<User>> {
         return this.userService.register(createUserDto);
