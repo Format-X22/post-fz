@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Request } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.model';
-import { ApiBearerAuth, ApiProperty, ApiPropertyOptional, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiProperty, ApiPropertyOptional, ApiTags } from '@nestjs/swagger';
 import { MaxLength, MinLength } from 'class-validator';
 import { Public } from '../auth/guards/public.guard';
 import { TAuth } from '../auth/auth.controller';
@@ -43,21 +43,33 @@ export class UserController {
 
     @Public()
     @Post()
+    @ApiCreatedResponse({
+        type: User,
+    })
     async register(@Body() createUserDto: RegistrationArgs): Promise<Partial<User>> {
         return this.userService.register(createUserDto);
     }
 
     @Get()
+    @ApiCreatedResponse({
+        type: User,
+    })
     async getMe(@Request() req: TAuth): Promise<Partial<User>> {
         return this.userService.getMe(req.user.id);
     }
 
     @Get(':id')
+    @ApiCreatedResponse({
+        type: User,
+    })
     async getProfile(@Param('id') id: number): Promise<Partial<User>> {
         return this.userService.getProfile(id);
     }
 
     @Patch()
+    @ApiCreatedResponse({
+        type: User,
+    })
     async updateSettings(@Request() req: TAuth, @Body() updateUserDto: SettingsArgs): Promise<Partial<User>> {
         return this.userService.updateSettings(req.user.id, updateUserDto);
     }
